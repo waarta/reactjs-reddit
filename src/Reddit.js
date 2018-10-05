@@ -9,21 +9,33 @@ class Reddit extends Component {
 	}
 
 	async componentDidMount() {
-		const response = await fetch("https://api.reddit.com/r/reactjs");
+		const response = await fetch(
+			"https://api.reddit.com/r/" + this.props.sujet
+		);
 		const json = await response.json();
-		//console.log(json.data.children);
 		this.setState({ threads: json.data.children });
 	}
+	async componentDidUpdate(prevProps) {
+		if (prevProps.sujet !== this.props.sujet) {
+			const response = await fetch(
+				"https://api.reddit.com/r/" + this.props.sujet
+			);
+			const json = await response.json();
+			this.setState({ threads: json.data.children });
+		}
+	}
+
 	render() {
-		console.log(this.state.threads[2]);
+		console.log(this.state.threads[3]);
 		return (
 			<div>
 				{this.state.threads.map((item, i) => (
-					<div key={i}>
+					<div className="ArticleBox" key={i}>
 						<h2>
 							{i}. {item.data.title}
 						</h2>
 						<p>{item.data.selftext}</p>
+						<p className="Auteur">{item.data.author}</p>
 					</div>
 				))}
 			</div>
